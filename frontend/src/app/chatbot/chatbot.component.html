@@ -1,0 +1,47 @@
+<div class="flex justify-center mt-10">
+    <div class="w-full max-w-2xl h-[70vh] flex flex-col border rounded-lg shadow-sm">
+
+        <!-- Messages -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            @for(msg of messages(); track msg.role) {
+            <div class="flex" [ngClass]="{
+          'justify-end': msg.role === 'user',
+          'justify-start': msg.role === 'bot'
+        }">
+                <div class="max-w-[80%] rounded-lg px-4 py-2 text-sm shadow" [ngClass]="{
+            'bg-blue-500 text-white': msg.role === 'user',
+            'bg-white text-gray-800': msg.role === 'bot'
+          }">
+                    <p class="whitespace-pre-line">{{ msg.text }}</p>
+                    @if(msg && msg.sources && msg.sources.length > 0) {
+                    <p class="mt-1 text-xs text-gray-500">
+                        Sources: {{ msg.sources.join(', ') }}
+                    </p>
+                    }
+                </div>
+            </div>
+            }
+
+            <!-- Loading -->
+            @if(loading()) {
+            <div class="flex justify-start">
+                <div class="bg-white text-gray-500 text-sm px-4 py-2 rounded-lg shadow">
+                    Thinking…
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- Input -->
+        <div class="border-t p-3 bg-white flex gap-2">
+            <input type="text"
+                class="flex-1 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Ask a compliance question..." [(ngModel)]="input" (keydown.enter)="send()" />
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-md text-sm disabled:opacity-50" (click)="send()"
+                [disabled]="loading()">
+                Send
+            </button>
+        </div>
+
+    </div>
+</div>
